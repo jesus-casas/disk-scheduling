@@ -19,3 +19,13 @@ A menu controls the operations, and each choice calls the appropriate procedure,
 ## Assignment:
 For a sequence of size m, a disk scheduling algorithm accepts a starting track followed by a sequence of m-1 integers, where each index value t is a request to seek track t.
 Each scheduling algorithm generates an ordering according to which the m-1 requests are serviced from the starting track, and calculates the distance of the tracks traversed.  
+
+# How to run
+
+1. Clone Repo
+
+2. Compile Code MacOS command line command using gcc is gcc main.c -o main
+
+3. Run code ./main
+
+# Test Input
