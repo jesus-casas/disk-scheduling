@@ -2,7 +2,9 @@
 
 #define MAX_TRACKS 100
 
-void enter_parameters(int *tracks, int *m, int *starting_track) {
+void enter_parameters(int *m) {
+    printf("Enter size of sequence: ");
+    scanf("%d", m);
 
 }
 
@@ -50,7 +52,7 @@ int main() {
 
         switch (user_input) {
             case 1:
-                enter_parameters(tracks, &m, &starting_track);
+                enter_parameters(&m);
                 break;
             case 2:
                 printf("FIFO Distance: %d\n", calculate_distance_fifo(tracks, m, starting_track));
