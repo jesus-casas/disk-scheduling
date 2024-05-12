@@ -10,6 +10,7 @@ int accessed_tracks[MAX_TRACKS];
 int m = 0;
 int starting_track = 0;
 int INT_MAX = 2147483647;
+int initial_direction = 0;
 
 // Function declarations
 void enter_parameters();
@@ -38,7 +39,7 @@ void calculate_distance_fifo() {
         accessed_tracks[i + 1] = tracks[i]; // Copy to accessed_tracks for consistency, starting from next index
     }
 
-    int distance = 0;
+    int distance = 0 + starting_track;
     int current_track = starting_track;
 
     for (int i = 1; i < m; i++) { // Start from 1 because the first track (starting track) doesn't involve movement
@@ -59,7 +60,7 @@ void calculate_distance_sstf() {
         scanf("%d", &tracks[i]);
     }
 
-    int distance = 0;
+    int distance = 0 + starting_track;
     int visited[MAX_TRACKS] = {0};  // Initializes the visited array to zero
     int current_track = starting_track;
     int accessed_index = 0;
@@ -98,7 +99,82 @@ void calculate_distance_sstf() {
 }
 
 // *************** Calculate distance function for SCAN **************
+void calculate_distance_scan() {
+    printf("Enter starting track: ");
+    scanf("%d", &starting_track);
 
+    printf("Enter sequence of tracks to seek: ");
+    for (int i = 0; i < m - 1; i++) {
+        scanf("%d", &tracks[i]);
+    }
+
+    printf("Enter initial direction: (0=decreasing, 1=increasing): ");
+    scanf("%d", &initial_direction);
+
+    tracks[m - 1] = starting_track; // Include starting track for processing
+    insertion_sort(tracks, m); // Sorting the tracks
+
+    int distance = 0 + starting_track;
+    int current_track = starting_track;
+    int accessed_index = 0;
+    int index = 0; // Find where the starting track is
+
+    // Find the index of the starting track
+    for (int i = 0; i < m; i++) {
+        if (tracks[i] == starting_track) {
+            index = i;
+            break;
+        }
+    }
+
+    accessed_tracks[accessed_index++] = starting_track;
+
+    // Process based on initial direction
+    if (initial_direction == 1) { // Increasing
+        // Move right
+        for (int i = index; i < m - 1; i++) {
+            distance += abs(tracks[i + 1] - tracks[i]);
+            current_track = tracks[i + 1];
+            accessed_tracks[accessed_index++] = current_track;
+        }
+        // Move left
+        for (int i = index - 1; i >= 0; i--) {
+            distance += abs(tracks[i + 1] - tracks[i]);
+            current_track = tracks[i];
+            accessed_tracks[accessed_index++] = current_track;
+        }
+    } else { // Decreasing
+        // Move left
+        for (int i = index - 1; i >= 0; i--) {
+            distance += abs(tracks[i + 1] - tracks[i]);
+            current_track = tracks[i];
+            accessed_tracks[accessed_index++] = current_track;
+        }
+        // Move right
+        for (int i = index; i < m - 1; i++) {
+            distance += abs(tracks[i + 1] - tracks[i]);
+            current_track = tracks[i + 1];
+            accessed_tracks[accessed_index++] = current_track;
+        }
+    }
+
+    print_tracks(accessed_tracks, accessed_index, distance);
+}
+
+void insertion_sort(int arr[], int n) {
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+// *************** Calculate distance function for CSCAN **************
 void calculate_distance_cscan() {
     
 }
@@ -143,7 +219,7 @@ int main() {
                 calculate_distance_sstf();
                 break;
             case 4:
-                //calculate_distance_scan();
+                calculate_distance_scan();
                 break;
             case 5:
                 calculate_distance_cscan();
